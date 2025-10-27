@@ -9,8 +9,7 @@ require_admin();
 
 include __DIR__ . '/_admin_header.php';
 
-
-// Ambil semua laporan beserta username pelapor dan tanggapan (jika ada)
+// Ambil semua laporan
 $query = "
     SELECT l.id AS laporan_id, l.judul, l.deskripsi, l.status, l.created_at, u.username, t.isi_tanggapan
     FROM laporan l
@@ -20,7 +19,7 @@ $query = "
 ";
 $result = mysqli_query($koneksi, $query);
 
-// Jika admin menambah tanggapan
+// Tambah tanggapan
 if (isset($_POST['submit_tanggapan'])) {
     $laporan_id = $_POST['laporan_id'];
     $isi_tanggapan = $_POST['isi_tanggapan'];
@@ -34,11 +33,25 @@ if (isset($_POST['submit_tanggapan'])) {
     exit();
 }
 
-// Jika admin ubah status
+// Ubah status
 if (isset($_POST['ubah_status'])) {
     $laporan_id = $_POST['laporan_id'];
     $status_baru = $_POST['status'];
     mysqli_query($koneksi, "UPDATE laporan SET status='$status_baru', update_at=NOW() WHERE id='$laporan_id'");
+    header("Location: data_laporan.php");
+    exit();
+}
+
+// Hapus laporan
+if (isset($_POST['hapus_laporan'])) {
+    $laporan_id = $_POST['laporan_id'];
+
+    // Hapus tanggapan yang terkait dulu (agar tidak error foreign key)
+    mysqli_query($koneksi, "DELETE FROM tanggapan WHERE laporan_id='$laporan_id'");
+
+    // Hapus laporan
+    mysqli_query($koneksi, "DELETE FROM laporan WHERE id='$laporan_id'");
+
     header("Location: data_laporan.php");
     exit();
 }
@@ -88,6 +101,10 @@ if (isset($_POST['ubah_status'])) {
                 <td>
                   <button class="btn btn-sm btn-success rounded-pill px-3" onclick="openModal(<?= $row['laporan_id'] ?>)">Tanggapi</button>
                   <button class="btn btn-sm btn-warning rounded-pill px-3" onclick="openStatusModal(<?= $row['laporan_id'] ?>)">Ubah Status</button>
+                  <form method="POST" style="display:inline;" onsubmit="return confirm('Yakin ingin menghapus laporan ini?')">
+                    <input type="hidden" name="laporan_id" value="<?= $row['laporan_id'] ?>">
+                    <button type="submit" name="hapus_laporan" class="btn btn-sm btn-danger rounded-pill px-3">Hapus</button>
+                  </form>
                 </td>
               </tr>
             <?php } ?>
