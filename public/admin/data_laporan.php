@@ -91,9 +91,8 @@ if (isset($_POST['hapus_laporan'])) {
                 <td>
                   <span class="badge 
                     <?= ($row['status'] == 'Diterima') ? 'bg-success' : 
-                        (($row['status'] == 'Diproses') ? 'bg-primary' : 
                         (($row['status'] == 'Selesai') ? 'bg-info text-dark' : 
-                        (($row['status'] == 'Ditolak') ? 'bg-danger' : 'bg-secondary'))) ?>">
+                        (($row['status'] == 'Ditolak') ? 'bg-danger' : 'bg-secondary')) ?>">
                     <?= htmlspecialchars($row['status']) ?>
                   </span>
                 </td>
@@ -137,7 +136,6 @@ if (isset($_POST['hapus_laporan'])) {
       <input type="hidden" name="laporan_id" id="laporan_id_status">
       <select name="status" class="form-select mb-3" required>
         <option value="Diterima">Diterima</option>
-        <option value="Diproses">Diproses</option>
         <option value="Selesai">Selesai</option>
         <option value="Ditolak">Ditolak</option>
       </select>

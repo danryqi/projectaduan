@@ -6,14 +6,13 @@ require_once __DIR__ . '/../../config/config.php';
 if (session_status() === PHP_SESSION_NONE) session_start();
 require_login();
 
-// Ambil semua laporan dengan join user untuk menampilkan username
+// Ambil semua laporan + nama pengirim
 $query = "
   SELECT laporan.*, user.username 
   FROM laporan 
   JOIN user ON laporan.user_id = user.user_id 
   ORDER BY laporan.created_at DESC
 ";
-
 $result = mysqli_query($koneksi, $query);
 
 include __DIR__ . '/_user_header.php';
@@ -45,6 +44,19 @@ include __DIR__ . '/_user_header.php';
                 <?php $no = 1; ?>
                 <?php while ($row = mysqli_fetch_assoc($result)): ?>
                   <?php
+                    // Ambil tanggapan terakhir dari tabel tanggapan
+                    $laporan_id = $row['id'];
+                    $q_tanggapan = "
+                      SELECT t.isi_tanggapan, t.created_at, u.username AS admin_nama
+                      FROM tanggapan t
+                      JOIN user u ON t.user_id = u.user_id
+                      WHERE t.laporan_id = '$laporan_id'
+                      ORDER BY t.created_at DESC
+                      LIMIT 1
+                    ";
+                    $res_t = mysqli_query($koneksi, $q_tanggapan);
+                    $tanggapan = mysqli_fetch_assoc($res_t);
+
                     $statusClass = match($row['status']) {
                       'Diterima'   => 'bg-secondary-subtle text-dark border border-secondary',
                       'Diproses'   => 'bg-warning-subtle text-dark border border-warning',
@@ -74,7 +86,10 @@ include __DIR__ . '/_user_header.php';
                         data-deskripsi="<?= htmlspecialchars($row['deskripsi']); ?>"
                         data-status="<?= htmlspecialchars($row['status']); ?>"
                         data-created="<?= htmlspecialchars($row['created_at']); ?>"
-                        data-updated="<?= htmlspecialchars($row['update_at']); ?>">
+                        data-updated="<?= htmlspecialchars($row['update_at']); ?>"
+                        data-tanggapan="<?= htmlspecialchars($tanggapan['isi_tanggapan'] ?? 'Belum ada tanggapan dari admin.'); ?>"
+                        data-admin="<?= htmlspecialchars($tanggapan['admin_nama'] ?? '-'); ?>"
+                        data-tanggal-tanggapan="<?= htmlspecialchars($tanggapan['created_at'] ?? '-'); ?>">
                         Detail
                       </button>
                     </td>
@@ -108,6 +123,11 @@ include __DIR__ . '/_user_header.php';
         <p><strong>Status:</strong><br><span id="modalStatus"></span></p>
         <p><strong>Tanggal Dibuat:</strong><br><span id="modalCreated"></span></p>
         <p><strong>Terakhir Diperbarui:</strong><br><span id="modalUpdated"></span></p>
+        <hr>
+        <h6 class="fw-semibold text-dark">Tanggapan Admin</h6>
+        <p><strong>Admin:</strong> <span id="modalAdmin"></span></p>
+        <p><strong>Tanggal Tanggapan:</strong> <span id="modalTanggalTanggapan"></span></p>
+        <p><strong>Isi Tanggapan:</strong><br><span id="modalTanggapan" class="text-secondary"></span></p>
       </div>
       <div class="modal-footer border-0">
         <button type="button" class="btn btn-secondary rounded-3 fw-semibold px-4" data-bs-dismiss="modal">Tutup</button>
@@ -120,28 +140,15 @@ include __DIR__ . '/_user_header.php';
 <script>
   const detailModal = document.getElementById('detailModal')
   detailModal.addEventListener('show.bs.modal', event => {
-    const button = event.relatedTarget
-    document.getElementById('modalUser').textContent = button.getAttribute('data-user')
-    document.getElementById('modalJudul').textContent = button.getAttribute('data-judul')
-    document.getElementById('modalDeskripsi').textContent = button.getAttribute('data-deskripsi')
-    document.getElementById('modalStatus').textContent = button.getAttribute('data-status')
-    document.getElementById('modalCreated').textContent = button.getAttribute('data-created')
-    document.getElementById('modalUpdated').textContent = button.getAttribute('data-updated')
+    const btn = event.relatedTarget
+    document.getElementById('modalUser').textContent = btn.getAttribute('data-user')
+    document.getElementById('modalJudul').textContent = btn.getAttribute('data-judul')
+    document.getElementById('modalDeskripsi').textContent = btn.getAttribute('data-deskripsi')
+    document.getElementById('modalStatus').textContent = btn.getAttribute('data-status')
+    document.getElementById('modalCreated').textContent = btn.getAttribute('data-created')
+    document.getElementById('modalUpdated').textContent = btn.getAttribute('data-updated')
+    document.getElementById('modalTanggapan').textContent = btn.getAttribute('data-tanggapan')
+    document.getElementById('modalAdmin').textContent = btn.getAttribute('data-admin')
+    document.getElementById('modalTanggalTanggapan').textContent = btn.getAttribute('data-tanggal-tanggapan')
   })
 </script>
-
-<style>
-  body { background-color: #f8f9fa; }
-  .card { background-color: #ffffff; }
-  thead.table-warning th {
-    background-color: #ffeaa7 !important;
-    color: #000;
-    font-weight: 600;
-    border-bottom: 2px solid #ffcc00 !important;
-  }
-  tbody tr:hover { background-color: #fffbea !important; transition: 0.25s ease; }
-  .badge { font-size: 0.9rem; }
-  .modal-body p { margin-bottom: 0.75rem; font-size: 15px; }
-</style>
-</body>
-</html>

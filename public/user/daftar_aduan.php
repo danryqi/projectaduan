@@ -8,8 +8,15 @@ require_login();
 
 $user_id = (int)($_SESSION['user_id'] ?? 0);
 
-// ambil semua laporan milik user
-$query = "SELECT * FROM laporan WHERE user_id = '$user_id' ORDER BY created_at DESC";
+// ambil semua laporan milik user + tanggapan (jika ada)
+$query = "
+  SELECT l.*, t.isi_tanggapan, t.created_at AS tanggapan_at, a.username AS admin_username
+  FROM laporan l
+  LEFT JOIN tanggapan t ON t.laporan_id = l.id
+  LEFT JOIN user a ON t.user_id = a.user_id
+  WHERE l.user_id = '$user_id'
+  ORDER BY l.created_at DESC
+";
 $result = mysqli_query($koneksi, $query);
 
 include __DIR__ . '/_user_header.php';
@@ -40,7 +47,6 @@ include __DIR__ . '/_user_header.php';
                 <?php $no = 1; ?>
                 <?php while ($row = mysqli_fetch_assoc($result)): ?>
                   <?php
-                    // styling badge agar semua teks mudah dibaca
                     $statusClass = match($row['status']) {
                       'Diterima'   => 'bg-secondary-subtle text-dark border border-secondary',
                       'Diproses'   => 'bg-warning-subtle text-dark border border-warning',
@@ -49,6 +55,10 @@ include __DIR__ . '/_user_header.php';
                       'Ditolak'    => 'bg-danger-subtle text-dark border border-danger',
                       default      => 'bg-light text-dark border border-secondary'
                     };
+
+                    $tanggapan = $row['isi_tanggapan'] ? htmlspecialchars($row['isi_tanggapan']) : 'Belum ada tanggapan.';
+                    $admin = $row['admin_username'] ? htmlspecialchars($row['admin_username']) : '-';
+                    $tgl_tanggapan = $row['tanggapan_at'] ? date('d M Y, H:i', strtotime($row['tanggapan_at'])) : '-';
                   ?>
                   <tr>
                     <td><?= $no++; ?></td>
@@ -69,7 +79,10 @@ include __DIR__ . '/_user_header.php';
                         data-deskripsi="<?= htmlspecialchars($row['deskripsi']); ?>"
                         data-status="<?= htmlspecialchars($row['status']); ?>"
                         data-created="<?= htmlspecialchars($row['created_at']); ?>"
-                        data-updated="<?= htmlspecialchars($row['update_at']); ?>">
+                        data-updated="<?= htmlspecialchars($row['update_at']); ?>"
+                        data-tanggapan="<?= $tanggapan; ?>"
+                        data-admin="<?= $admin; ?>"
+                        data-tanggapanat="<?= $tgl_tanggapan; ?>">
                         Detail
                       </button>
                     </td>
@@ -108,6 +121,10 @@ include __DIR__ . '/_user_header.php';
         <p><strong>Status:</strong><br><span id="modalStatus"></span></p>
         <p><strong>Tanggal Dibuat:</strong><br><span id="modalCreated"></span></p>
         <p><strong>Terakhir Diperbarui:</strong><br><span id="modalUpdated"></span></p>
+        <hr>
+        <p><strong>Tanggapan Admin:</strong><br><span id="modalTanggapan"></span></p>
+        <p><strong>Diberikan oleh:</strong> <span id="modalAdmin"></span></p>
+        <p><strong>Tanggal Tanggapan:</strong> <span id="modalTanggapanAt"></span></p>
       </div>
       <div class="modal-footer border-0">
         <button type="button" class="btn btn-secondary rounded-3 fw-semibold px-4" data-bs-dismiss="modal">Tutup</button>
@@ -127,6 +144,9 @@ include __DIR__ . '/_user_header.php';
     document.getElementById('modalStatus').textContent = button.getAttribute('data-status')
     document.getElementById('modalCreated').textContent = button.getAttribute('data-created')
     document.getElementById('modalUpdated').textContent = button.getAttribute('data-updated')
+    document.getElementById('modalTanggapan').textContent = button.getAttribute('data-tanggapan')
+    document.getElementById('modalAdmin').textContent = button.getAttribute('data-admin')
+    document.getElementById('modalTanggapanAt').textContent = button.getAttribute('data-tanggapanat')
   })
 </script>
 
@@ -154,17 +174,6 @@ include __DIR__ . '/_user_header.php';
   tbody tr:hover {
     background-color: #fffbea !important;
     transition: 0.25s ease;
-  }
-
-  .btn-outline-primary {
-    border-color: #0d6efd;
-    color: #0d6efd;
-    transition: 0.2s ease-in-out;
-  }
-
-  .btn-outline-primary:hover {
-    background-color: #0d6efd;
-    color: #fff;
   }
 
   .btn-warning {
