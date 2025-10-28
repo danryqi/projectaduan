@@ -65,22 +65,82 @@ include __DIR__ . '/_user_header.php';
 
 <style>
   body {
-    background-color: #f8f9fa;
+    background: linear-gradient(135deg, #fffdf5, #fffaf0);
+    min-height: 100vh;
   }
+
+  main {
+    margin-top: 60px;
+  }
+
+  /* ===== Card ===== */
+  .card {
+    border: none;
+    border-radius: 28px;
+    background: linear-gradient(180deg, #ffffff, #fafafa);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+    transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1),
+                box-shadow 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  .card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+  }
+
+  .card h5 {
+    color: #ffb300;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+  }
+
+  /* ===== Input & Textarea ===== */
   .form-control {
-    background-color: #e5e5e5ff;
-    border-color: #dee2e6;
-    transition: all 0.2s ease-in-out;
+    background-color: #f7f7f7;
+    border: 1px solid #e2e2e2;
+    border-radius: 14px;
+    transition: all 0.25s ease-in-out;
+    font-size: 0.95rem;
+    padding: 0.7rem 1rem;
   }
+
   .form-control:focus {
     background-color: #fff;
     border-color: #ffc107;
-    box-shadow: 0 0 0 .15rem rgba(255,193,7,.25);
+    box-shadow: 0 0 0 0.25rem rgba(255, 193, 7, 0.25);
   }
+
+  label.form-label {
+    color: #555;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+  }
+
+  /* ===== Button ===== */
+  .btn-warning {
+    border: none;
+    border-radius: 14px;
+    font-weight: 600;
+    letter-spacing: 0.3px;
+    transition: all 0.3s ease;
+    box-shadow: 0 6px 20px rgba(255, 193, 7, 0.25);
+  }
+
   .btn-warning:hover {
     background-color: #e0a800;
+    box-shadow: 0 10px 25px rgba(255, 193, 7, 0.35);
+    transform: translateY(-2px);
+  }
+
+  /* ===== Responsif ===== */
+  @media (max-width: 768px) {
+    .card {
+      padding: 2rem 1.5rem !important;
+      border-radius: 20px;
+    }
   }
 </style>
+
 
 </body>
 </html>

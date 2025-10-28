@@ -152,3 +152,137 @@ include __DIR__ . '/_user_header.php';
     document.getElementById('modalTanggalTanggapan').textContent = btn.getAttribute('data-tanggal-tanggapan')
   })
 </script>
+
+<style>
+  body {
+    background: linear-gradient(135deg, #fffdf5, #fffaf0);
+  }
+
+  main {
+    min-height: 80vh;
+  }
+
+  /* ====== CARD UTAMA ====== */
+  .card {
+    background: linear-gradient(180deg, #ffffff, #fafafa);
+    border-radius: 26px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+    transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1),
+                box-shadow 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  .card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+  }
+
+  .card h5 {
+    color: #ffb300;
+    font-weight: 700;
+    letter-spacing: 0.4px;
+  }
+
+  /* ====== TABEL ====== */
+  .table {
+    border-collapse: separate;
+    border-spacing: 0 10px;
+  }
+
+  .table thead th {
+    background: #fff7df;
+    color: #7a5c00;
+    font-weight: 700;
+    text-transform: uppercase;
+    font-size: 0.85rem;
+    letter-spacing: 0.4px;
+    border: none;
+    padding: 12px 8px;
+  }
+
+  .table tbody tr {
+    transition: all 0.3s ease;
+  }
+
+  .table tbody tr:hover td {
+    background: #fff9e6;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.06);
+  }
+
+  .table tbody td {
+    vertical-align: middle;
+    background: #ffffff;
+    border: none;
+    border-radius: 12px;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04);
+    padding: 12px 10px;
+  }
+
+  /* ====== BADGE STATUS ====== */
+  .badge {
+    font-size: 0.8rem;
+    padding: 6px 12px;
+    border-radius: 999px;
+    font-weight: 600;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06);
+  }
+
+  /* ====== BUTTON "DETAIL" ====== */
+  .btn-outline-warning {
+    border: 2px solid #ffc107;
+    color: #ffb300;
+    font-weight: 600;
+    transition: all 0.3s ease;
+  }
+
+  .btn-outline-warning:hover {
+    background-color: #ffc107;
+    color: #fff;
+    box-shadow: 0 5px 15px rgba(255, 193, 7, 0.3);
+    transform: translateY(-2px);
+  }
+
+  /* ====== MODAL ====== */
+  .modal-content {
+    border-radius: 20px;
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
+    border: none;
+    transition: all 0.4s ease;
+  }
+
+  .modal-header {
+    border-bottom: none;
+    background: linear-gradient(135deg, #fff7df, #fff2bf);
+    border-radius: 20px 20px 0 0;
+  }
+
+  .modal-title {
+    color: #7a5c00;
+    font-weight: 700;
+  }
+
+  .modal-body p {
+    margin-bottom: 0.6rem;
+  }
+
+  .modal-body strong {
+    color: #333;
+  }
+
+  .btn-secondary {
+    border: none;
+    border-radius: 10px;
+    background: #6c757d;
+    font-weight: 600;
+    transition: all 0.3s ease;
+  }
+
+  .btn-secondary:hover {
+    background: #5a6268;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  }
+
+  * {
+    transition: all 0.25s ease-in-out;
+  }
+</style>
+

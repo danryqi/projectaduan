@@ -27,7 +27,7 @@ require_once __DIR__ . '/../../app/functions.php';
             <div class="collapse navbar-collapse justify-content-end" id="navbarAdmin">
                 <ul class="navbar-nav">
                     <li class="nav-item px-3">
-                    <a class="nav-link <?= basename($_SERVER['PHP_SELF']) === 'user_dashboard.php' ? 'active text-warning fw-semibold' : '' ?>" href="user_dashboard.php">Beranda</a>
+                    <a class="nav-link <?= basename($_SERVER['PHP_SELF']) === 'u    ser_dashboard.php' ? 'active text-warning fw-semibold' : '' ?>" href="user_dashboard.php">Beranda</a>
                     </li>
                     <li class="nav-item px-3">
                     <a class="nav-link <?= basename($_SERVER['PHP_SELF']) === 'buat_aduan.php' ? 'active text-warning fw-semibold' : '' ?>" href="buat_aduan.php">Buat Aduan</a>

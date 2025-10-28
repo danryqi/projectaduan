@@ -6,13 +6,26 @@ if (session_status() === PHP_SESSION_NONE) {
 }
 
 // Ambil ID user yang sedang login
-$user_id = $_SESSION['user_id'] ?? null;
+$user_id  = (int)($_SESSION['user_id'] ?? 0);
+
 
 // Jika user belum login, redirect
 if (!$user_id) {
     header('Location: ../login.php');
     exit;
 }
+
+$username = 'User'; // fallback
+
+if ($user_id > 0) {
+    $sql = "SELECT username FROM user WHERE user_id = $user_id LIMIT 1";
+    $res = mysqli_query($koneksi, $sql);
+    if ($res && ($row = mysqli_fetch_assoc($res))) {
+        $username = htmlspecialchars($row['username']);
+    }
+}
+
+
 
 $result_aduan = mysqli_query($koneksi, "SELECT COUNT(*) AS total_aduan FROM laporan WHERE user_id = '$user_id'");
 $data_aduan = mysqli_fetch_assoc($result_aduan);

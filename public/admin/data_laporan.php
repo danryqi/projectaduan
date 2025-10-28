@@ -98,13 +98,30 @@ if (isset($_POST['hapus_laporan'])) {
                 </td>
                 <td><?= $row['isi_tanggapan'] ? htmlspecialchars($row['isi_tanggapan']) : '<i>Belum ada tanggapan</i>' ?></td>
                 <td>
-                  <button class="btn btn-sm btn-success rounded-pill px-3" onclick="openModal(<?= $row['laporan_id'] ?>)">Tanggapi</button>
-                  <button class="btn btn-sm btn-warning rounded-pill px-3" onclick="openStatusModal(<?= $row['laporan_id'] ?>)">Ubah Status</button>
-                  <form method="POST" style="display:inline;" onsubmit="return confirm('Yakin ingin menghapus laporan ini?')">
-                    <input type="hidden" name="laporan_id" value="<?= $row['laporan_id'] ?>">
-                    <button type="submit" name="hapus_laporan" class="btn btn-sm btn-danger rounded-pill px-3">Hapus</button>
-                  </form>
+                  <div class="d-flex justify-content-center align-items-center gap-2 flex-wrap">
+
+                    <!-- Tanggapi -->
+                    <button class="btn btn-icon btn-success" title="Tanggapi" onclick="openModal(<?= (int)$row['laporan_id'] ?>)">
+                      <i class="bi bi-chat-dots"></i>
+                    </button>
+
+                    <!-- Ubah Status -->
+                    <button class="btn btn-icon btn-warning" title="Ubah Status" onclick="openStatusModal(<?= (int)$row['laporan_id'] ?>)">
+                      <i class="bi bi-arrow-repeat"></i>
+                    </button>
+
+                    <!-- Hapus -->
+                    <form method="POST" style="display:inline;" onsubmit="return confirm('Yakin ingin menghapus laporan ini?')">
+                      <input type="hidden" name="laporan_id" value="<?= (int)$row['laporan_id'] ?>">
+                      <button type="submit" name="hapus_laporan" class="btn btn-icon btn-danger" title="Hapus">
+                        <i class="bi bi-trash"></i>
+                      </button>
+                    </form>
+
+                  </div>
                 </td>
+
+
               </tr>
             <?php } ?>
           </tbody>

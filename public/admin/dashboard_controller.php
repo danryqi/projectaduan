@@ -3,9 +3,21 @@
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
-require_admin();
 
 include __DIR__ . '/../../config/config.php';
+
+require_admin();
+
+$user_id  = (int)($_SESSION['user_id'] ?? 0);
+$username = 'Admin'; // fallback
+
+if ($user_id > 0) {
+    $sql = "SELECT username FROM user WHERE user_id = $user_id LIMIT 1";
+    $res = mysqli_query($koneksi, $sql);
+    if ($res && ($row = mysqli_fetch_assoc($res))) {
+        $username = htmlspecialchars($row['username']);
+    }
+}
 
 $result_user = mysqli_query($koneksi, "SELECT COUNT(*) AS total_user FROM user");
 $data_user = mysqli_fetch_assoc($result_user);
@@ -23,12 +35,12 @@ $total_selesai = $data_selesai['total_selesai'] ?? 0;
 
 $result_proses = mysqli_query($koneksi, "SELECT COUNT(*) AS total_diterima FROM laporan WHERE status = 'Diterima'");
 $data_diterima = mysqli_fetch_assoc($result_proses);
-$total_proses = $data_diterima['total_diterima'] ?? 0;
+$total_diterima = $data_diterima['total_diterima'] ?? 0;
 
 $result_proses = mysqli_query($koneksi, "SELECT COUNT(*) AS total_ditanggapi FROM laporan WHERE status = 'Ditanggapi'");
 $data_ditanggapi = mysqli_fetch_assoc($result_proses);
-$total_proses = $data_ditanggapi['total_ditanggapi'] ?? 0;
+$total_ditanggapi = $data_ditanggapi['total_ditanggapi'] ?? 0;
 
 $result_proses = mysqli_query($koneksi, "SELECT COUNT(*) AS total_ditolak FROM laporan WHERE status = 'Ditolak'");
 $data_ditolak = mysqli_fetch_assoc($result_proses);
-$total_proses = $data_ditolak['total_ditolak'] ?? 0;
+$total_ditolak = $data_ditolak['total_ditolak'] ?? 0;

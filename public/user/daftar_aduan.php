@@ -19,6 +19,8 @@ $query = "
 ";
 $result = mysqli_query($koneksi, $query);
 
+// $can_edit = ($row['status'] === 'Diterima');
+
 include __DIR__ . '/_user_header.php';
 ?>
 
@@ -152,49 +154,157 @@ include __DIR__ . '/_user_header.php';
 
 <style>
   body {
-    background-color: #f8f9fa;
+    background: linear-gradient(135deg, #fffdf5, #fffaf0);
+    min-height: 100vh;
   }
 
+  main {
+    min-height: 80vh;
+  }
+
+  /* ===== Card utama ===== */
   .card {
-    background-color: #ffffff;
+    background: linear-gradient(180deg, #ffffff, #fafafa);
+    border: none;
+    border-radius: 26px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+    transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1),
+                box-shadow 0.4s cubic-bezier(0.22, 1, 0.36, 1);
   }
 
-  table {
-    border-radius: 0.75rem;
-    overflow: hidden;
+  .card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+  }
+
+  .card h5 {
+    color: #ffb300;
+    font-weight: 700;
+    letter-spacing: 0.4px;
+  }
+
+  /* ===== Table styling ===== */
+  .table {
+    border-collapse: separate;
+    border-spacing: 0 10px;
   }
 
   thead.table-warning th {
-    background-color: #ffeaa7 !important;
-    color: #000;
-    font-weight: 600;
-    border-bottom: 2px solid #ffcc00 !important;
+    background-color: #fff7df !important;
+    color: #7a5c00 !important;
+    font-weight: 700;
+    text-transform: uppercase;
+    font-size: 0.85rem;
+    letter-spacing: 0.4px;
+    border: none !important;
+    padding: 12px 10px;
   }
 
-  tbody tr:hover {
-    background-color: #fffbea !important;
-    transition: 0.25s ease;
+  tbody tr {
+    transition: all 0.3s ease;
+  }
+
+  tbody tr:hover td {
+    background: #fff9e6;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.06);
+  }
+
+  tbody td {
+    background: #ffffff;
+    border: none;
+    border-radius: 12px;
+    padding: 12px 10px;
+    vertical-align: middle;
+    box-shadow: 0 1px 6px rgba(0, 0, 0, 0.04);
+  }
+
+  /* ===== Badge status ===== */
+  .badge {
+    font-size: 0.8rem;
+    padding: 6px 12px;
+    border-radius: 999px;
+    font-weight: 600;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06);
+  }
+
+  /* ===== Button styling ===== */
+  .btn-outline-warning {
+    border: 2px solid #ffc107;
+    color: #ffb300;
+    font-weight: 600;
+    transition: all 0.3s ease;
+  }
+
+  .btn-outline-warning:hover {
+    background-color: #ffc107;
+    color: #fff;
+    box-shadow: 0 6px 20px rgba(255, 193, 7, 0.3);
+    transform: translateY(-2px);
   }
 
   .btn-warning {
     background-color: #ffc107;
     border: none;
-    transition: all 0.2s ease-in-out;
+    color: #fff;
+    font-weight: 600;
+    box-shadow: 0 6px 20px rgba(255, 193, 7, 0.25);
+    transition: all 0.3s ease;
   }
 
   .btn-warning:hover {
     background-color: #e0a800;
+    box-shadow: 0 10px 25px rgba(255, 193, 7, 0.35);
+    transform: translateY(-2px);
   }
 
-  .badge {
-    font-size: 0.9rem;
+  .btn-secondary {
+    border: none;
+    border-radius: 10px;
+    background: #6c757d;
+    font-weight: 600;
+    transition: all 0.3s ease;
+  }
+
+  .btn-secondary:hover {
+    background: #5a6268;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  }
+
+  /* ===== Modal styling ===== */
+  .modal-content {
+    border-radius: 20px;
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
+    border: none;
+    transition: all 0.4s ease;
+  }
+
+  .modal-header {
+    background: linear-gradient(135deg, #fff7df, #fff2bf);
+    border-radius: 20px 20px 0 0;
+    border-bottom: none;
+  }
+
+  .modal-title {
+    color: #7a5c00;
+    font-weight: 700;
   }
 
   .modal-body p {
-    margin-bottom: 0.75rem;
+    margin-bottom: 0.6rem;
     font-size: 15px;
+    color: #444;
   }
+
+  .modal-body strong {
+    color: #222;
+  }
+
+  * {
+    transition: all 0.25s ease-in-out;
+  }
+
 </style>
+
 
 </body>
 </html>
